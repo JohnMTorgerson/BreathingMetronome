@@ -7,7 +7,7 @@
 <style type="text/css">
 body {
 	background-color:#000000;
-	color:white;
+	color:#C0AAC0;
 	font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -33,10 +33,22 @@ body {
 
 #container input {
 	margin:5px;
+	padding:5px;
+	border-radius:5px;
+	font-size: 25px;
 }
 
-h1 {
+input[type=text] {
+	width:100px;
+	height:30px;
+	text-align: center;
+	background-color: #AAAAAA;
+}
 
+input[type=button] {
+	width:114px;
+	height:44px;
+	background-color: #AA55CC;
 }
 </style>
 
@@ -155,7 +167,7 @@ function Metronome() {
 <div id="container">
 	<div id="warning">Invalid Tempo</div>
     <form name="main">
-        <input type="text" name="tempo" id="tempo" size="5" placeholder="Tempo" /><br />
+        <input type="text" name="tempo" id="tempo" placeholder="Tempo" /><br />
         <input type="button" id="button" value="Start" onclick="javascript:Click();" />
     </form>
     <h1 id="tempoDisplay"></h1>
