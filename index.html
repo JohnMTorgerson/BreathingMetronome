@@ -12,17 +12,13 @@ body {
 }
 
 #container {
-	position:absolute;
+position:absolute;
 	left:50%;
-	width:200px;
-	margin-left:-100px;
 	top:50%;
-	height:150px;
-	margin-top:-75px;
+	transform: translate(-50%, -50%) scale(3);
+	transform-origin: 50% 50%;
 	text-align:center;
 	overflow:visible;
-	transform: scale(3);
-	transform-origin: 50% 50%;
 }
 
 #warning {
@@ -42,7 +38,7 @@ input[type=text] {
 	width:100px;
 	height:30px;
 	text-align: center;
-	background-color: #AAAAAA;
+	background-color: #CCCCCC;
 }
 
 input[type=button] {
