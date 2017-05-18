@@ -8,7 +8,7 @@
 body {
 	background-color:#000000;
 	color:white;
-	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 }
 
 #container {
@@ -21,6 +21,8 @@ body {
 	margin-top:-75px;
 	text-align:center;
 	overflow:visible;
+	transform: scale(3);
+	transform-origin: 50% 50%;
 }
 
 #warning {
@@ -31,17 +33,16 @@ body {
 
 #container input {
 	margin:5px;
-	box-shadow: 0px 0px 50px #29F;
 }
 
 h1 {
-	text-shadow: 0px 0px 20px #29F;
+
 }
 </style>
 
 <script type="text/javascript">
 var running = false; // global variable to keep track of state
-var defaultTempo = "57"; 
+var defaultTempo = "57";
 var tempo = defaultTempo; // set default tempo
 var display, form, elements; // initialize some global variables
 
@@ -50,6 +51,14 @@ function Init() {
 	display.innerHTML = tempo + " BPM"; // display initial tempo
 	form = document.forms['main'];
 	elements = form.elements;
+
+	// enable spacebar play/pause
+	document.addEventListener('keydown', function(e) {
+		if (e.keyCode == 32) {
+			e.preventDefault();
+			Click();
+		}
+	});
 }
 
 function Click() {
@@ -73,11 +82,11 @@ function Validate() {
 	// Erase any previous warning
 	var warning = document.getElementById('warning');
 	warning.style.visibility = 'hidden';
-	
+
 	// Validate
 	var valid = true;
 	var re = /\D/;
-	if (tempo.match(re) != null) { // input contains non-digit characters
+	if (tempo.match(re) != null || tempo < 1) { // input contains non-digit characters
 		warning.style.visibility = 'visible'; // display warning
 		valid = false;
 	}
@@ -90,10 +99,13 @@ function Metronome() {
 	var beep2 = document.getElementById('beep2');
 	var counter = 0;
 	Six();
-	
+
 	function Six() {
 		if (running) {
 			counter += 1;
+			// pause and reset the sound in case it's still going from the last function call
+			beep1.pause();
+			beep1.currentTime = 0;
 			beep1.play();
 			if (counter < 6)
 				setTimeout(Six, interval);
@@ -101,10 +113,13 @@ function Metronome() {
 				setTimeout(Three, interval);
 		}
 	}
-	
+
 	function Three() {
 		if (running) {
 			counter += 1;
+			// pause and reset the sound in case it's still going from the last function call
+			beep2.pause();
+			beep2.currentTime = 0;
 			beep2.play();
 			if (counter < 9)
 				setTimeout(Three, interval);
@@ -120,15 +135,15 @@ function Metronome() {
 </head>
 
 <body>
-    <audio id="beep1">
+    <audio id="beep1" preload="auto">
         <source src="beep1.ogg" type="audio/ogg" />
         <source src="beep1.mp3" type="audio/mp3" />
     </audio>
-    <audio id="beep2">
+    <audio id="beep2" preload="auto">
         <source src="beep2.ogg" type="audio/ogg" />
         <source src="beep2.mp3" type="audio/mp3" />
     </audio>
-    
+
 <div id="container">
 	<div id="warning">Invalid Tempo</div>
     <form name="main">
@@ -137,7 +152,7 @@ function Metronome() {
     </form>
     <h1 id="tempoDisplay"></h1>
 </div>
-    
+
     <script type="text/javascript">Init();</script>
 </body>
 </html>
