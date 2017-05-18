@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Breathing Metronome</title>
+
+<style type="text/css">
+body {
+	background-color:#000000;
+	color:white;
+	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+}
+
+#container {
+	position:absolute;
+	left:50%;
+	width:200px;
+	margin-left:-100px;
+	top:50%;
+	height:150px;
+	margin-top:-75px;
+	text-align:center;
+	overflow:visible;
+}
+
+#warning {
+	color:red;
+	font-weight:bold;
+	visibility:hidden;
+}
+
+#container input {
+	margin:5px;
+	box-shadow: 0px 0px 50px #29F;
+}
+
+h1 {
+	text-shadow: 0px 0px 20px #29F;
+}
+</style>
+
+<script type="text/javascript">
+var running = false; // global variable to keep track of state
+var defaultTempo = "57"; 
+var tempo = defaultTempo; // set default tempo
+var display, form, elements; // initialize some global variables
+
+function Init() {
+	display = document.getElementById("tempoDisplay");
+	display.innerHTML = tempo + " BPM"; // display initial tempo
+	form = document.forms['main'];
+	elements = form.elements;
+}
+
+function Click() {
+	if (running) {
+		document.getElementById("button").setAttribute("value","Start"); // change button to "Start"
+		running = false;
+	}
+	else {
+		running = true;
+		tempo = elements['tempo'].value; // set tempo to user input
+		if (tempo == "")
+			tempo = defaultTempo;
+		if (!Validate()) return; // if invalid input, display warning and stop
+		display.innerHTML = tempo + " BPM"; // display new tempo
+		document.getElementById("button").setAttribute("value","Stop"); // change button to "Stop"
+		Metronome();
+	}
+}
+
+function Validate() {
+	// Erase any previous warning
+	var warning = document.getElementById('warning');
+	warning.style.visibility = 'hidden';
+	
+	// Validate
+	var valid = true;
+	var re = /\D/;
+	if (tempo.match(re) != null) { // input contains non-digit characters
+		warning.style.visibility = 'visible'; // display warning
+		valid = false;
+	}
+	return valid;
+}
+
+function Metronome() {
+	var interval = 60000 / tempo; // milliseconds between each tick
+	var beep1 = document.getElementById('beep1');
+	var beep2 = document.getElementById('beep2');
+	var counter = 0;
+	Six();
+	
+	function Six() {
+		if (running) {
+			counter += 1;
+			beep1.play();
+			if (counter < 6)
+				setTimeout(Six, interval);
+			else
+				setTimeout(Three, interval);
+		}
+	}
+	
+	function Three() {
+		if (running) {
+			counter += 1;
+			beep2.play();
+			if (counter < 9)
+				setTimeout(Three, interval);
+			else {
+				counter = 0;
+				setTimeout(Six, interval);
+			}
+		}
+	}
+}
+
+</script>
+</head>
+
+<body>
+    <audio id="beep1">
+        <source src="beep1.ogg" type="audio/ogg" />
+        <source src="beep1.mp3" type="audio/mp3" />
+    </audio>
+    <audio id="beep2">
+        <source src="beep2.ogg" type="audio/ogg" />
+        <source src="beep2.mp3" type="audio/mp3" />
+    </audio>
+    
+<div id="container">
+	<div id="warning">Invalid Tempo</div>
+    <form name="main">
+        <input type="text" name="tempo" id="tempo" size="4" placeholder="Tempo" /><br />
+        <input type="button" id="button" value="Start" onclick="javascript:Click();" />
+    </form>
+    <h1 id="tempoDisplay"></h1>
+</div>
+    
+    <script type="text/javascript">Init();</script>
+</body>
+</html>
