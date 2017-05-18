@@ -59,6 +59,14 @@ function Init() {
 			Click();
 		}
 	});
+
+	// the following is necessary to overcome mobile Safari's autoplay limitations
+	document.addEventListener('touchstart', function(e) {
+		document.getElementById('beep1').play();
+		document.getElementById('beep1').pause();
+		document.getElementById('beep2').play();
+		document.getElementById('beep2').pause();
+	});
 }
 
 function Click() {
@@ -147,7 +155,7 @@ function Metronome() {
 <div id="container">
 	<div id="warning">Invalid Tempo</div>
     <form name="main">
-        <input type="text" name="tempo" id="tempo" size="4" placeholder="Tempo" /><br />
+        <input type="text" name="tempo" id="tempo" size="5" placeholder="Tempo" /><br />
         <input type="button" id="button" value="Start" onclick="javascript:Click();" />
     </form>
     <h1 id="tempoDisplay"></h1>
